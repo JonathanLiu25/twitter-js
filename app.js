@@ -2,12 +2,16 @@ const express = require( 'express' );
 const app = express();
 const nunjucks = require( 'nunjucks' );
 const routes = require('./routes');
+const socketio = require('socket.io');
 
 var counter = 0;
 
-app.listen(3000, function(){
+
+var server = app.listen(3000, function(){
 	console.log('working');
-})
+});
+
+var io = socketio.listen(server);
 
 //configuration calls
 
@@ -23,7 +27,7 @@ app.use(function(request, response, next){
 	next();
 })
 
-app.use('/', routes);
+app.use('/', routes(io));
 
 // app.get('/', function (request, response){
 

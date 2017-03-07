@@ -7,40 +7,50 @@ const bodyParser = require('body-parser');
 
 // router.use(express.bodyParser());
 
-router.use(bodyParser.urlencoded({ extended: false }))
-router.use(bodyParser.json());
+module.exports = function(io){
 
 
-router.use(express.static('public'));
+	router.use(bodyParser.urlencoded({ extended: false }))
+	router.use(bodyParser.json());
 
-router.get( '/tweets/:id', function(request, response){
-	var tweetID = parseInt(request.params.id);
-	var tweets = tweetBank.find( {id: tweetID} );
-	response.render( 'index', {tweets: tweets} );
-});
 
-router.get( '/users/:name', function(request, response){
-	var name = request.params.name;
-	var tweets = tweetBank.find( {name: name} );
-	response.render( 'index', {tweets: tweets, showForm: true, name: name} );
-});
+	router.use(express.static('public'));
 
-router.get('/', function(request, response){
-	var tweets = tweetBank.list();
-	response.render( 'index', {tweets: tweets, showForm: true} );
-});
+	router.get( '/tweets/:id', function(request, response){
+		var tweetID = parseInt(request.params.id);
+		var tweets = tweetBank.find( {id: tweetID} );
+		response.render( 'index', {tweets: tweets} );
+	});
 
-router.post('/tweets', function(request, response) {
+	router.get( '/users/:name', function(request, response){
+		var name = request.params.name;
+		var tweets = tweetBank.find( {name: name} );
+		response.render( 'index', {tweets: tweets, showForm: true, name: name} );
+	});
 
-  var name = request.body.name;
-  var text = request.body.text;
-  tweetBank.add(name, text);
+	router.get('/', function(request, response){
+		var tweets = tweetBank.list();
+		response.render( 'index', {tweets: tweets, showForm: true} );
+	});
 
-  response.redirect('/');
-});
+	router.post('/tweets', function(request, response) {
 
-module.exports = router;
+	    var name = request.body.name;
+	    var text = request.body.text;
+	    tweetBank.add(name, text);
 
-// router.get('/', function(requestion, response){
+	    io.sockets.emit('newTweet', {text});
 
-// })
+	    response.redirect('/');
+
+	});
+
+
+	return router;
+};
+
+// module.exports = router;
+
+// // router.get('/', function(requestion, response){
+
+// // })
