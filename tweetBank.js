@@ -10,7 +10,7 @@ module.exports = {
 
 
 function add (name, content) {
-  data.push({ name: name, content: content });
+  data.push({ id: data.length, name: name, content: content });
 }
 
 function list () {
@@ -22,9 +22,6 @@ function find (properties) {
   return _.cloneDeep(_.filter(data, properties));
 
 }
-
-
-// _.filter(array, function(elem){ return elem % 2 === 0})
 
 
 const randArrayEl = function(arr) {
@@ -42,13 +39,13 @@ const getFakeTweet = function() {
   return "Fullstack Academy is " + randArrayEl(awesome_adj) + "! The instructors are just so " + randArrayEl(awesome_adj) + ". #fullstacklove #codedreams";
 };
 
-module.exports.add('Omri Berns', 'Hi');
-
 for (let i = 0; i < 10; i++) {
   module.exports.add( getFakeName(), getFakeTweet() );
 
 }
 
-console.log(find( {name: 'Omri Berns'} ))
-console.log(find( ['name', 'Omri Berns'] ));
-console.log(find( {content: 'Hi'} ))
+console.log(data);
+
+// console.log(find( {name: 'Omri Berns'} ))
+// console.log(find( ['name', 'Omri Berns'] ));
+// console.log(find( {content: 'Hi'} ))
